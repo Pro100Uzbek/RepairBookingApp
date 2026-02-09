@@ -139,12 +139,15 @@ const FormHandler = {
 
     resetForm: function() {
         document.getElementById('orderForm').reset();
-        if (window.FileManager) window.FileManager.clearAll();
+        if (window.FileManager && typeof window.FileManager.clearAllFiles === 'function') {
+            window.FileManager.clearAllFiles();
+        }
     },
 
     closeStatusModal: function() {
         document.getElementById('statusModal').classList.remove('active');
     }
 };
+
 
 window.FormHandler = FormHandler;
