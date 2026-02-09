@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script>
+    // Блокировка ошибок от расширений
+    (function() {
+        const originalErrorHandler = window.onerror;
+        window.onerror = function(msg, url, line, col, error) {
+            // Игнорировать ошибки расширений
+            if (url && url.includes('chrome-extension://')) {
+                console.warn('Игнорируем ошибку расширения:', msg);
+                return true; // Предотвратить вывод в консоль
+            }
+            
+            // Пропускать ваши ошибки
+            if (originalErrorHandler) {
+                return originalErrorHandler.call(this, msg, url, line, col, error);
+            }
+            return false;
+        };
+    })();
+
+    // Также игнорировать ошибки console.error от расширений
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+        const stack = new Error().stack;
+        if (stack && stack.includes('chrome-extension://')) {
+            // Игнорировать
+            return;
+        }
+        originalConsoleError.apply(console, args);
+    };
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repair Service Montenegro</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <div class="header-nav">
+            <!-- Левый блок (можно оставить пустым или добавить меню) -->
+            <div class="header-left"></div>
+            
+            <!-- Центральный блок с логотипом -->
+            <div class="header-center">
+                <img src="assets/logos/dobarservis.png" alt="DOBAR SERVIS" class="header-logo">
+            </div>
+            
+            <!-- Правый блок с переключателем языков -->
+            <div class="lang-switch">
+                <button id="lang-ru" onclick="changeLang('ru')" class="btn active">RU</button>
+                <button id="lang-cnr" onclick="changeLang('cnr')" class="btn">ME</button>
+                <button id="lang-en" onclick="changeLang('en')" class="btn">EN</button>
+            </div>
+        </div>
+
+        <!-- Заголовок -->
+        <div class="main-title-container">
+            <h1 id="title" class="hero-title">Запись на ремонт</h1>
+        </div>
+
+        <!-- Скрытые поля -->
+        <input type="hidden" id="lat" name="lat" value="">
+        <input type="hidden" id="lng" name="lng" value="">
+        <input type="hidden" id="source" name="source" value="direct">
+        <input type="hidden" id="user_id" name="user_id" value="">
+
+        <!-- Основная форма -->
+        <form id="orderForm">
+            <!-- Компактный ряд для контактных данных -->
+            <div class="compact-row">
+                <div class="form-group">
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Имя" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="Телефон" required>
+                    <div id="phone-error" class="validation-error" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Город (одиночное поле) -->
+            <div class="form-group">
+                <select id="city" name="city" class="form-control" onchange="handleCityChange(this.value)" required>
+                    <option value="" disabled selected>Выберите город</option>
+                    <option value="Podgorica">Podgorica</option>
+                    <option value="Budva">Budva</option>
+                    <option value="Bar">Bar</option>
+                    <option value="Tivat">Tivat</option>
+                    <option value="Kotor">Kotor</option>
+                    <option value="Herceg Novi">Herceg Novi</option>
+                </select>
+            </div>
+
+            <!-- Адрес (появится после выбора города) -->
+            <div id="address-section" style="display: none;">
+                <div class="form-group" style="margin-bottom: var(--space-sm);">
+                    <select id="address-type-select" class="form-control" onchange="handleAddressSelection(this.value, document.getElementById('city').value)">
+                        <option value="" disabled selected data-i18n="address.optChooseAddress">Выберите способ...</option>
+                        <option value="map" data-i18n="address.optMapSelect">📍 Указать на карте</option>
+                        <option value="manual" data-i18n="address.optManualEntry">⌨️ Ввести адрес/ориентир</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="address-input" name="address" class="form-control" placeholder="Адрес или ориентир..."
+                    data-required="true"> <!-- Заменяем required на data-required -->
+                </div>
+            </div>
+
+            <!-- Оборудование в компактном порядке -->
+            <!-- Поле бренда с кнопкой -->
+            <div class="form-group">
+                <div class="brand-input-wrapper">
+                    <input type="text" id="brand-input" class="form-control" 
+                        placeholder="Выберите бренд" readonly 
+                        style="border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); cursor: pointer;"
+                        onclick="openBrandModal()"> <!-- Добавляем onclick -->
+                    <button type="button" class="brand-select-btn" onclick="openBrandModal()">
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </button>
+                </div>
+                <input type="hidden" id="brand" name="brand" required>
+            </div>
+
+            <div class="compact-row">
+                <div class="form-group">
+                    <select id="type-category" name="category" class="form-control" required onchange="CategoryManager.updateSubMenu()">
+                    </select>
+                </div>
+                
+                <div class="form-group" id="type-subcategory" style="display: none;">
+                    <select id="subcategory-select" name="subcategory" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <!-- Описание проблемы -->
+            <div class="form-group">
+                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Описание проблемы"></textarea>
+            </div>
+
+            <!-- Фото -->
+            <div class="form-group">
+                <label for="photo" class="custom-file-upload">
+                    <span class="material-symbols-outlined">photo_camera</span>
+                    <span id="lbl-photo-btn">Добавить фото/видео (до 3-х)</span>
+                </label>
+                <input type="file" id="photo" name="photo" accept="image/*,video/*" multiple onchange="FileManager.handleFiles(this)" style="display: none;">
+                <div id="preview-container" class="preview-grid" style="margin-top: var(--space-sm);"></div>
+            </div>
+
+            <!-- Кнопка отправки -->
+            <button type="submit" id="btn-submit" class="btn btn-primary">Вызвать мастера</button>
+        </form>
+
+        <!-- Модальные окна -->
+        <!-- Модалка карты -->
+        <div id="mapModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="map-modal-title" class="modal-title">Выберите местоположение</h3>
+                    <button type="button" class="modal-close" onclick="closeMapModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="map-search-input" class="form-control" placeholder="Поиск адреса...">
+                    <div id="map-canvas-container">
+                         <div id="map-canvas" style="width:100%; height:400px;"></div>
+                    </div>
+                    <div id="location-comparison"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="confirmLocation()" id="confirm-location-btn"
+                    disabled>Подтвердить адрес</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модалка брендов -->
+        <div id="brandModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="brand-modal-title" class="modal-title">Выберите бренд</h3>
+                    <button type="button" class="modal-close" onclick="closeBrandModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Сетка брендов 3x3 -->
+                    <div class="brand-selector-grid" id="brandSelectorGrid"></div>
+                    
+                    <!-- Поле ручного ввода -->
+                    <div class="manual-brand-input" style="margin-top: var(--space-lg);">
+                        <div class="input-with-button">
+                            <input type="text" id="customBrand" class="form-control" 
+                                placeholder="Или введите другой бренд" 
+                                style="height: 38px; font-size: 14px;">
+                            <button type="button" class="btn btn-primary" onclick="applyCustomBrand()" 
+                                    style="height: 38px; min-width: 60px; font-size: 14px;">
+                                ОК
+                            </button>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 4px;">
+                            Нажмите Enter для быстрого подтверждения
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeBrandModal()">Отмена</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модалка подтверждения -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title" class="modal-title">Проверьте данные</h3>
+                    <button type="button" class="modal-close" onclick="FormHandler.closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="summary"></div>
+                    
+                    <!-- Статусбар отправки -->
+                    <div id="upload-status" style="display: none; margin-top: var(--space-lg);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm);">
+                            <span id="upload-status-text">Отправка данных...</span>
+                            <span id="upload-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="upload-progress" class="progress-fill"></div>
+                        </div>
+                        <div id="upload-log" style="margin-top: var(--space-sm); font-size: 12px; color: var(--text-tertiary); max-height: 100px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="FormHandler.closeModal()">Изменить</button>
+                    <button type="button" class="btn btn-primary" id="confirm-send-btn">Всё верно</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модалка статуса -->
+        <div id="statusModal" class="modal">
+            <div class="modal-content" style="text-align: center;">
+                <div style="font-size: 60px; color: var(--success-color); margin-bottom: var(--space-lg);">✓</div>
+                <h3 id="status-title" class="modal-title">Заявка отправлена!</h3>
+                <div class="modal-body">
+                    <div id="status-details"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="FormHandler.closeStatusModal()">Понятно</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Лоадер -->
+        <div id="loader" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="loader">
+                    <p>Отправка данных...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Внешние библиотеки -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU110F26z6_6y_lrJ4mjtcbt64gvorbmo&libraries=places,geometry&loading=async"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+
+    <!-- Локальные JS файлы с ОПТИМИЗИРОВАННЫМ порядком загрузки -->
+    <!-- 1. Базовые модули и переводы -->
+    <script src="js/translations.js"></script>
+
+    <!-- 2. CSS Handler (управляет только стилями) -->
+    <script src="js/css-handler.js"></script>
+
+    <!-- 3. Валидация -->
+    <script src="js/validation.js"></script>
+
+    <!-- 4. Модули приложения -->
+    <script src="js/categories-handler.js"></script>
+    <script src="js/file-handler.js"></script>
+    <script src="js/maps-handler.js"></script>
+    <script src="js/form-handler.js"></script>
+
+    <!-- 5. Функции интерфейса -->
+    <script src="js/script.js"></script>
+
+    <!-- 6. Инициализация приложения (последняя) -->
+    <script src="js/app.js"></script>
+
+    <!-- Минимальные отладочные скрипты (PRODUCTION) -->
+    <script>
+        // Базовая обработка ошибок (без отладочного вывода)
+        window.addEventListener('error', function(e) {
+            // Игнорируем ошибки от расширений браузера
+            if (e.filename && e.filename.includes('chrome-extension')) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+        
+        // Минимальная проверка загрузки
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверка наличия основных элементов
+            const checkElements = ['orderForm', 'phone', 'name', 'brand'];
+            checkElements.forEach(id => {
+                if (!document.getElementById(id)) {
+                    console.warn('Элемент не найден: #' + id);
+                }
+            });
+        });
+    </script>
+
+    <!-- В конце body, после всех скриптов -->
+    <script>
+    // Дополнительная отладка
+    window.addEventListener('load', function() {
+        console.log('=== СТАТУС СИСТЕМЫ ===');
+        console.log('1. Telegram WebApp:', window.Telegram && window.Telegram.WebApp ? '✅' : '❌');
+        console.log('2. intlTelInput:', typeof intlTelInput !== 'undefined' ? '✅' : '❌');
+        console.log('3. window.iti:', window.iti ? '✅' : '❌');
+        console.log('4. ValidationManager:', typeof ValidationManager !== 'undefined' ? '✅' : '❌');
+        console.log('5. Google Maps:', typeof google !== 'undefined' ? '✅' : '❌');
+        console.log('6. Current Lang:', window.currentLang || 'не установлен');
+        
+        // Проверка основных элементов
+        const checkElements = [
+            'orderForm', 'phone', 'name', 'brand', 
+            'type-category', 'city', 'address-input'
+        ];
+        
+        checkElements.forEach(id => {
+            const el = document.getElementById(id);
+            console.log(`${id}:`, el ? '✅' : '❌');
+        });
+    });
+    </script>
+    <script src="js/debug.js"></script>
+    <script src="js/event-protection.js"></script>
+</body>
+</html>

@@ -1,0 +1,1233 @@
+/* css/main.css */
+
+/* ==========================================================================
+   CSS ПЕРЕМЕННЫЕ
+   ========================================================================== */
+:root {
+    /* Цветовая палитра */
+    --primary-color: #007AFF;
+    --primary-dark: #0056CC;
+    --success-color: #34C759;
+    --success-light: #E6F4EA;
+    --error-color: #FF3B30;
+    --error-light: #FFF2F1;
+    --warning-color: #FF9500;
+    --warning-light: #FEF7E0;
+    
+    /* Нейтральные цвета */
+    --bg-color: #FFFFFF;
+    --bg-secondary: #F2F2F7;
+    --bg-tertiary: #F9F9FB;
+    --border-color: #E5E5EA;
+    --border-light: #EFEFF4;
+    --text-primary: #000000;
+    --text-secondary: #3C3C43;
+    --text-tertiary: #8E8E93;
+    --text-placeholder: #C7C7CC;
+    
+    /* Тени */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+    
+    /* Радиусы скругления */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
+    --radius-full: 50%;
+    
+    /* Размеры и отступы */
+    --input-height: 44px;
+    --space-xs: 3px;
+    --space-sm: 6px;
+    --space-md: 10px;
+    --space-lg: 14px;
+    --space-xl: 18px;
+    --space-2xl: 22px;
+    
+    /* Анимации */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+/* ==========================================================================
+   БАЗОВЫЕ СТИЛИ И СБРОС
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: var(--space-sm);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ==========================================================================
+   КОНТЕЙНЕРЫ И МАКЕТ
+   ========================================================================== */
+.container {
+    background: var(--bg-color);
+    width: 100%;
+    max-width: 420px;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    margin-top: var(--space-sm);
+}
+
+/* ==========================================================================
+   ШАПКА И ЛОГОТИП
+   ========================================================================== */
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding: 0 var(--space-sm);
+    gap: var(--space-md);
+}
+
+.logo-container {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-logo {
+    display: block;
+    height: var(--input-height);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    transition: height var(--transition-fast);
+}
+
+.header-title {
+    display: none;
+}
+
+/* ==========================================================================
+   ЗАГОЛОВКИ
+   ========================================================================== */
+.main-title-container {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.hero-title {
+    font-size: 28px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* ==========================================================================
+   ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ
+   ========================================================================== */
+.lang-switch {
+    display: flex;
+    gap: var(--space-xs);
+    background: var(--bg-secondary);
+    padding: var(--space-xs);
+    border-radius: var(--radius-md);
+}
+
+.lang-switch button {
+    background: transparent;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.lang-switch button.active {
+    background: var(--primary-color);
+    color: var(--bg-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.lang-switch button:hover:not(.active) {
+    background: rgba(0, 122, 255, 0.1);
+}
+
+/* ==========================================================================
+   ФОРМЫ И ПОЛЯ ВВОДА
+   ========================================================================== */
+#orderForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.form-group {
+    margin-bottom: var(--space-md);
+    position: relative;
+}
+
+/* Базовые стили для всех полей ввода */
+.form-control,
+input[type="text"],
+input[type="tel"],
+textarea,
+select.form-control {
+    width: 100%;
+    height: var(--input-height);
+    padding: var(--space-md) var(--space-lg);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-tertiary);
+    font-family: inherit;
+    font-size: 15px;
+    transition: all var(--transition-base);
+    color: var(--text-placeholder);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+}
+
+/* Текстовые области */
+textarea.form-control {
+    height: auto;
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Плейсхолдер */
+.form-control::placeholder {
+    color: var(--text-placeholder);
+    opacity: 1;
+}
+
+/* Стили состояний полей */
+.form-control:not(:focus):not(:placeholder-shown):not(.filled):not(.error) {
+    border-color: var(--border-color) !important;
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-placeholder) !important;
+    box-shadow: none;
+}
+
+/* Фокус */
+.form-control:focus {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Заполненные поля */
+.form-control.filled,
+.form-control:not(:placeholder-shown):not(:focus):not(.error):valid {
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1);
+}
+
+/* Поля с ошибкой */
+.form-control.error,
+.form-control:invalid:not(:placeholder-shown):not(:focus) {
+    background-color: var(--error-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--error-color) !important;
+    box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.1);
+}
+
+/* Селекты */
+select.form-control option {
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+select.form-control option:first-child {
+    color: var(--text-placeholder);
+}
+
+/* В разделе СТИЛИ СОСТОЯНИЙ ПОЛЕЙ добавьте: */
+.form-control.filled:not(:focus),
+.form-control:not(:placeholder-shown):not(:focus):valid,
+.form-control:not(:placeholder-shown):not(:focus):invalid {
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1);
+}
+
+/* И убедитесь, что это правило присутствует и имеет !important */
+.form-control:valid:not(:focus):not(:placeholder-shown) {
+    background-color: var(--success-light) !important;
+    border-color: var(--success-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1) !important;
+}
+
+/* ==========================================================================
+   КОМПАКТНЫЕ РЯДЫ
+   ========================================================================== */
+.compact-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    align-items: start;
+}
+
+.compact-row .form-group {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+/* Строки формы */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   ПОЛЕ БРЕНДА
+   ========================================================================== */
+.brand-input-wrapper {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+#brand-input {
+    flex: 1;
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-placeholder) !important;
+    border: 1.5px solid var(--border-color) !important;
+    border-right: none !important;
+    border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.brand-select-btn {
+    background-color: var(--bg-tertiary);
+    color: var(--text-tertiary);
+    border: 1.5px solid var(--border-color);
+    border-left: none;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    outline: none;
+}
+
+/* Состояния для поля бренда */
+#brand-input.filled {
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1);
+}
+
+#brand-input:focus {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    z-index: 2;
+}
+
+#brand-input.error {
+    background-color: var(--error-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--error-color) !important;
+    box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.1);
+}
+
+/* Состояния для кнопки бренда */
+#brand-input.filled ~ .brand-select-btn {
+    background-color: var(--success-light);
+    color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+#brand-input:focus ~ .brand-select-btn {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+#brand-input.error ~ .brand-select-btn {
+    background-color: var(--error-light);
+    color: var(--error-color);
+    border-color: var(--error-color);
+}
+
+.brand-input-wrapper:hover .brand-select-btn:not(:focus) {
+    background-color: var(--bg-secondary);
+}
+
+.brand-select-btn:hover {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.brand-select-btn:active {
+    background-color: #E5E5EA;
+}
+
+/* ==========================================================================
+   ПОЛЕ ИМЕНИ (ВЫСОКИЙ ПРИОРИТЕТ)
+   ========================================================================== */
+#name.form-control {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-placeholder) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Когда поле заполнено (зеленый) */
+#name.form-control.filled,
+#name.form-control:not(:placeholder-shown):not(:focus) {
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1) !important;
+}
+
+/* Только при фокусе (синий) */
+#name.form-control:focus {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15) !important;
+}
+
+/* Переопределяем все возможные состояния валидации */
+#name.form-control:valid:not(:focus):not(:placeholder-shown),
+#name.form-control:invalid:not(:focus):not(:placeholder-shown) {
+    background-color: var(--success-light) !important;
+    border-color: var(--success-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1) !important;
+}
+
+/* Особое правило для :valid без фокуса */
+#name.form-control:valid:not(:focus) {
+    background-color: var(--success-light) !important;
+    border-color: var(--success-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1) !important;
+}
+
+/* ==========================================================================
+   ПОЛЕ АДРЕСА
+   ========================================================================== */
+.address-display-input {
+    background-color: var(--bg-secondary) !important;
+    border: 1px dashed var(--border-color) !important;
+    color: var(--text-secondary);
+    cursor: default;
+}
+
+#address-input.address-display-input.filled {
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1);
+}
+
+#address-input[readonly] {
+    cursor: default;
+    background-color: var(--success-light) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--success-color) !important;
+}
+
+#address-input[readonly]:not(.filled) {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-placeholder) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Состояние для кнопки подтверждения */
+.btn-primary:disabled,
+.btn-primary.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: var(--primary-color);
+}
+
+#confirm-location-btn {
+    transition: all 0.3s ease;
+}
+
+#confirm-location-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+/* ==========================================================================
+   КАТЕГОРИИ И ПОДКАТЕГОРИИ
+   ========================================================================== */
+#type-subcategory {
+    display: none;
+    opacity: 1;
+    height: auto;
+    transition: all var(--transition-base);
+}
+
+#type-subcategory.active {
+    display: block;
+    opacity: 1;
+    height: auto;
+    margin-top: var(--space-sm);
+    padding: 0;
+    border-left: none !important;
+    background: transparent !important;
+}
+
+#type-subcategory.active ~ #description {
+    margin-top: var(--space-lg);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   КНОПКИ
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 var(--space-xl);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-base);
+    outline: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Варианты кнопок */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    background-color: #E5E5EA;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: var(--bg-color);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+    background-color: rgba(0, 122, 255, 0.05);
+}
+
+/* ==========================================================================
+   ЗАГРУЗКА ФАЙЛОВ
+   ========================================================================== */
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    width: 100%;
+    height: 40px;
+    padding: var(--space-sm);
+    background: var(--bg-secondary);
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-size: 14px;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 122, 255, 0.05);
+    border-color: var(--primary-dark);
+}
+
+.custom-file-upload:active {
+    background: rgba(0, 122, 255, 0.1);
+}
+
+/* ==========================================================================
+   ПРЕВЬЮ ФАЙЛОВ
+   ========================================================================== */
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+    margin: var(--space-sm) 0;
+}
+
+.preview-grid:empty {
+    display: none;
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+}
+
+.preview-item:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-file {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    background: rgba(255, 59, 48, 0.9);
+    color: var(--bg-color);
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.remove-file:hover {
+    background: var(--error-color);
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   МОДАЛЬНЫЕ ОКНА
+   ========================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--space-md);
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-color);
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh;
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    animation: modalSlideUp 0.3s ease-out;
+    margin-top: 5vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    background: var(--bg-secondary);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--text-tertiary);
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background: #E5E5EA;
+}
+
+.modal-body {
+    margin-bottom: var(--space-md);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: auto;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Модальные кнопки */
+.modal-footer .btn {
+    height: 36px !important;
+    font-size: 14px !important;
+    padding: 0 var(--space-lg) !important;
+    min-height: 36px;
+}
+
+.modal-footer .btn-primary {
+    min-width: 70px;
+}
+
+.modal-footer .btn-secondary {
+    min-width: 90px;
+}
+
+/* ==========================================================================
+   ВЫБОР БРЕНДА В МОДАЛКЕ
+   ========================================================================== */
+.brand-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+    max-height: 400px;
+    min-height: 300px;
+    overflow-y: auto;
+    padding: var(--space-xs);
+    margin: var(--space-sm) 0;
+}
+
+.brand-selector-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.brand-selector-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+.brand-card {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-height: 85px;
+}
+
+.brand-card:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.brand-card:active {
+    transform: translateY(0);
+}
+
+.brand-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 95px;
+    max-height: 95px;
+}
+
+.manual-brand-input {
+    padding: var(--space-sm);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--space-sm);
+}
+
+/* ==========================================================================
+   КАРТА
+   ========================================================================== */
+#map-canvas-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    margin: var(--space-md) 0;
+}
+
+#map-search-input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    background-color: var(--bg-tertiary);
+    margin-bottom: var(--space-md);
+}
+
+.geo-button {
+    position: absolute;
+    right: var(--space-md);
+    top: var(--space-md);
+    background: var(--bg-color);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    z-index: 999;
+    transition: all var(--transition-fast);
+}
+
+.geo-button:hover {
+    background: var(--bg-secondary);
+    transform: scale(1.05);
+}
+
+.geo-button.loading .material-symbols-outlined {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   ВАЛИДАЦИЯ
+   ========================================================================== */
+.validation-error {
+    color: var(--error-color);
+    font-size: 11px;
+    margin-top: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.field-with-error .form-control {
+    border-color: var(--error-color) !important;
+    background-color: var(--error-light) !important;
+}
+
+.field-with-error .validation-error {
+    display: block;
+}
+
+/* ==========================================================================
+   ИКОНКИ
+   ========================================================================== */
+.material-symbols-outlined {
+    font-size: 18px;
+}
+
+.custom-file-upload .material-symbols-outlined {
+    font-size: 18px;
+}
+
+/* ==========================================================================
+   ЛОАДЕР
+   ========================================================================== */
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl);
+}
+
+.loader::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+}
+
+/* ==========================================================================
+   АДАПТИВНОСТЬ
+   ========================================================================== */
+
+/* Мобильные устройства (до 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: var(--space-sm);
+    }
+    
+    .container {
+        padding: var(--space-md);
+        border-radius: var(--radius-md);
+        margin-top: var(--space-sm);
+    }
+    
+    .hero-title {
+        font-size: 24px;
+    }
+    
+    .header-logo {
+        height: 24px;
+    }
+    
+    /* Вертикальное расположение */
+    .compact-row,
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
+    }
+    
+    /* Уменьшаем размер текста */
+    .form-control,
+    .btn {
+        font-size: 14px;
+    }
+    
+    /* Модальные окна */
+    .modal {
+        padding: var(--space-sm);
+    }
+    
+    .modal-content {
+        max-width: 95%;
+        max-height: 90vh;
+        margin-top: 2vh;
+        padding: var(--space-md);
+    }
+    
+    /* Бренды и превью */
+    .brand-selector-grid,
+    .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xs);
+        max-height: 250px;
+    }
+    
+    .brand-selector-grid {
+        max-height: 50vh;
+    }
+    
+    /* Модальные футеры */
+    .modal-footer {
+        flex-direction: column;
+        gap: var(--space-sm);
+        margin-top: var(--space-lg);
+    }
+    
+    /* Кнопка выбора бренда */
+    .brand-select-btn {
+        width: 40px;
+    }
+}
+
+/* Очень маленькие экраны (до 320px) */
+@media (max-width: 320px) {
+    .container {
+        padding: var(--space-sm);
+    }
+    
+    .hero-title {
+        font-size: 22px;
+    }
+    
+    .form-control,
+    input[type="text"],
+    input[type="tel"],
+    select.form-control {
+        height: 40px;
+        padding: var(--space-sm) var(--space-md);
+        font-size: 13px;
+    }
+    
+    .btn {
+        height: 40px;
+        font-size: 13px;
+    }
+    
+    .brand-selector-grid,
+    .preview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    textarea.form-control {
+        min-height: 80px;
+        font-size: 13px;
+    }
+}
+
+/* Короткие экраны (до 600px высоты) */
+@media (max-height: 600px) {
+    .main-title-container {
+        margin-bottom: var(--space-lg);
+    }
+    
+    .form-group {
+        margin-bottom: var(--space-sm);
+    }
+    
+    .container {
+        padding: var(--space-sm);
+    }
+    
+    textarea.form-control {
+        min-height: 80px;
+    }
+}
+
+/* Планшеты (768px и меньше) */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .form-row .form-group {
+        margin-bottom: var(--space-sm);
+    }
+}
+
+/* Скрытое поле бренда для отправки формы */
+#brand {
+    display: none;
+}
+
+/* ==========================================================================
+   Основные стили для состояний
+   ========================================================================== */
+
+.form-control.filled {
+    /* CSSHandler будет добавлять инлайн-стили, 
+       но CSS может задавать базовые стили */
+    background-color: var(--success-light) !important;
+    border-color: var(--success-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-control.error {
+    background-color: var(--error-light) !important;
+    border-color: var(--error-color) !important;
+}
+
+/* Для поля имени специальные стили */
+#name.form-control.filled {
+    background-color: var(--success-light) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.1) !important;
+}
+
+
+/* ==========================================================================
+    ОТЛАДОЧНЫЕ СТИЛИ
+   ========================================================================== */
+
+/* Добавить в конец файла */
+.debug-outline {
+    outline: 2px solid red !important;
+}
+
+.preview-item.duplicate {
+    border: 3px dashed red !important;
+    position: relative;
+}
+
+.preview-item.duplicate::after {
+    content: "ДУБЛИКАТ";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: red;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   ПРОГРЕССБАР И ЛОАДЕРЫ
+   ========================================================================== */
+
+/* Прогрессбар */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: var(--space-sm);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Лоадер для статуса */
+.loader {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Лог отправки */
+#upload-log {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    border: 1px solid var(--border-color);
+    font-family: monospace;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+#upload-log div {
+    padding: 2px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+#upload-log div:last-child {
+    border-bottom: none;
+}
