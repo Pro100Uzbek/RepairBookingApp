@@ -7,6 +7,7 @@ let userActualCoords = null;
 let isTelegramWebApp = false;
 let geocodeTimeout = null;
 let confirmLocationBtn = null;
+let mapInitialized = false;
 
 // Координаты центров городов
 const cityCoordinates = {
@@ -17,6 +18,11 @@ const cityCoordinates = {
     'Kotor': { lat: 42.424, lng: 18.771 },
     'Herceg Novi': { lat: 42.453, lng: 18.537 }
 };
+
+function initMap() {
+    console.log('✅ Google Maps API инициализирована');
+    mapInitialized = true;
+}
 
 // Обновление центра карты при выборе города
 function updateMapCenterByCity(cityName) {
@@ -611,4 +617,5 @@ window.reloadMap = function() {
             }
         }, 100);
     }
+
 }
