@@ -268,7 +268,7 @@
 
     <!-- Внешние библиотеки -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU110F26z6_6y_lrJ4mjtcbt64gvorbmo&libraries=places,geometry&loading=async"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU110F26z6_6y_lrJ4mjtcbt64gvorbmo&libraries=places,geometry&loading=async&callback=initMap"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
 
     <!-- Локальные JS файлы с ОПТИМИЗИРОВАННЫМ порядком загрузки -->
@@ -293,30 +293,6 @@
     <!-- 6. Инициализация приложения (последняя) -->
     <script src="js/app.js"></script>
 
-    <!-- Минимальные отладочные скрипты (PRODUCTION) -->
-    <script>
-        // Базовая обработка ошибок (без отладочного вывода)
-        window.addEventListener('error', function(e) {
-            // Игнорируем ошибки от расширений браузера
-            if (e.filename && e.filename.includes('chrome-extension')) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
-        
-        // Минимальная проверка загрузки
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверка наличия основных элементов
-            const checkElements = ['orderForm', 'phone', 'name', 'brand'];
-            checkElements.forEach(id => {
-                if (!document.getElementById(id)) {
-                    console.warn('Элемент не найден: #' + id);
-                }
-            });
-        });
-    </script>
-
-    <!-- В конце body, после всех скриптов -->
     <script>
     // Дополнительная отладка
     window.addEventListener('load', function() {
@@ -343,4 +319,5 @@
     <script src="js/debug.js"></script>
     <script src="js/event-protection.js"></script>
 </body>
+
 </html>
