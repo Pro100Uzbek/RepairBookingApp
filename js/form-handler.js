@@ -138,10 +138,116 @@ const FormHandler = {
     },
 
     resetForm: function() {
-        document.getElementById('orderForm').reset();
+        console.log('🔄 Сброс формы...');
+        
+        // 1. Сбрасываем стандартные поля формы
+        const form = document.getElementById('orderForm');
+        if (form) {
+            // Сбрасываем все поля вручную, а не через form.reset()
+            const nameField = document.getElementById('name');
+            const phoneField = document.getElementById('phone');
+            const descriptionField = document.getElementById('description');
+            
+            if (nameField) nameField.value = '';
+            if (phoneField) phoneField.value = '';
+            if (descriptionField) descriptionField.value = '';
+            
+            // 2. Сбрасываем селект города
+            const citySelect = document.getElementById('city');
+            if (citySelect) {
+                citySelect.selectedIndex = 0; // Выбираем первый option (disabled selected)
+                citySelect.classList.remove('filled');
+            }
+            
+            // 3. Сбрасываем селект категории
+            const categorySelect = document.getElementById('type-category');
+            if (categorySelect) {
+                categorySelect.innerHTML = '<option value="" disabled selected>Select type</option>';
+                categorySelect.classList.remove('filled');
+                
+                // Переинициализируем категории
+                if (typeof CategoryManager !== 'undefined' && CategoryManager.initMainCategories) {
+                    setTimeout(() => {
+                        CategoryManager.initMainCategories(window.currentLang);
+                    }, 100);
+                }
+            }
+        }
+        
+        // 4. Очищаем FileManager
         if (window.FileManager && typeof window.FileManager.clearAllFiles === 'function') {
             window.FileManager.clearAllFiles();
         }
+        
+        // 5. Очищаем поле бренда
+        const brandInput = document.getElementById('brand-input');
+        const brandHidden = document.getElementById('brand');
+        if (brandInput) {
+            brandInput.value = '';
+            brandInput.classList.remove('filled', 'error');
+            brandInput.style.color = 'var(--text-placeholder)';
+            brandInput.style.backgroundColor = 'var(--bg-color)';
+            brandInput.style.borderColor = '';
+        }
+        if (brandHidden) {
+            brandHidden.value = '';
+        }
+        
+        // 6. Скрываем секцию адреса и очищаем поля
+        const addressSection = document.getElementById('address-section');
+        if (addressSection) {
+            addressSection.style.display = 'none';
+        }
+        
+        const addressInput = document.getElementById('address-input');
+        const addressTypeSelect = document.getElementById('address-type-select');
+        if (addressInput) {
+            addressInput.value = '';
+            addressInput.classList.remove('filled');
+        }
+        if (addressTypeSelect) {
+            addressTypeSelect.selectedIndex = 0;
+        }
+        
+        // 7. Сбрасываем координаты
+        const latField = document.getElementById('lat');
+        const lngField = document.getElementById('lng');
+        if (latField) latField.value = '';
+        if (lngField) lngField.value = '';
+        
+        // 8. Скрываем и очищаем подкатегорию
+        const subcategoryContainer = document.getElementById('type-subcategory');
+        const subcategorySelect = document.getElementById('subcategory-select');
+        if (subcategoryContainer) {
+            subcategoryContainer.style.display = 'none';
+        }
+        if (subcategorySelect) {
+            subcategorySelect.innerHTML = '<option value="">Select subcategory</option>';
+            subcategorySelect.value = '';
+        }
+        
+        // 9. Восстанавливаем переводы через небольшую задержку
+        setTimeout(() => {
+            if (typeof changeLang === 'function') {
+                changeLang(window.currentLang);
+            }
+            
+            // 10. Сбрасываем состояние полей через CSSHandler
+            if (typeof CSSHandler !== 'undefined') {
+                // Если есть метод resetAllFields
+                if (CSSHandler.resetAllFields) {
+                    CSSHandler.resetAllFields();
+                }
+                // Иначе сбрасываем вручную
+                else if (CSSHandler.resetField) {
+                    document.querySelectorAll('.form-control').forEach(field => {
+                        CSSHandler.resetField(field);
+                    });
+                }
+            }
+        }, 200);
+        
+        console.log('✅ Форма полностью сброшена');
     },
 
     closeStatusModal: function() {
@@ -151,3 +257,4 @@ const FormHandler = {
 
 
 window.FormHandler = FormHandler;
+
