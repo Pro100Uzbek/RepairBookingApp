@@ -112,14 +112,28 @@ const FormHandler = {
                 files: encodedFiles // Фотографии
             };
 
-            await fetch(scriptURL, {
+            // Меняем mode на 'cors' чтобы получить ответ от сервера
+            const response = await fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'cors', // Изменено с 'no-cors' на 'cors'
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(dataToSend)
             });
 
-            FormHandler.handleSuccess();
+            // Получаем данные от сервера
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                // 1. Получаем номер заявки и статус из app script
+                const orderNumber = result.orderNumber;
+                const status = 'Новая: Ожидает обработки';
+                
+                // 2. Вставляем номер заявки и статус в функцию showFinalStatus
+                // 3-4. Функция сама генерирует случайную фразу и показывает пользователю
+                this.showFinalStatus(orderNumber, status);
+            } else {
+                throw new Error(result.message || "Ошибка отправки");
+            }
 
         } catch (error) {
             console.error('Ошибка:', error);
@@ -129,15 +143,78 @@ const FormHandler = {
         }
     },
 
-    handleSuccess: function() {
-        document.getElementById('status-title').innerText = 'Успешно!';
-        document.getElementById('status-details').innerHTML = '<p>Заявка отправлена. Ожидайте звонка.</p>';
-        const okBtn = document.querySelector('#statusModal .btn-primary');
-        if (okBtn) okBtn.style.display = 'block';
-        this.resetForm();
+    /**
+     * Показ финального статуса с номером заявки
+     * @param {string} orderNumber - номер заявки от сервера
+     * @param {string} status - статус заявки от сервера
+     */
+    showFinalStatus: function(orderNumber, status) {
+        const lang = window.currentLang || 'ru';
+        
+        // 3. Генерируем случайную фразу (на выбранном языке)
+        let randomPhrase = "Спасибо за обращение!";
+        if (window.getRandomPhrase) {
+            randomPhrase = window.getRandomPhrase(lang);
+        } else if (window.translations?.[lang]?.phrases) {
+            const phrases = window.translations[lang].phrases;
+            randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+        }
+        randomPhrase = randomPhrase.replace("{orderNum}", orderNumber);
+
+        const details = document.getElementById('status-details');
+        
+        // Получаем заголовки
+        let successTitle = "Заявка отправлена!";
+        let orderLabel = "Номер заявки";
+        let statusLabel = "Статус";
+        
+        if (window.getTranslation) {
+            successTitle = window.getTranslation('common.successTitle', lang);
+            orderLabel = window.getTranslation('status.orderLabel', lang);
+            statusLabel = window.getTranslation('status.statusLabel', lang);
+        } else if (window.translations?.[lang]) {
+            successTitle = window.translations[lang].successTitle || successTitle;
+            orderLabel = window.translations[lang].orderLabel || orderLabel;
+            statusLabel = window.translations[lang].statusLabel || statusLabel;
+        }
+        
+        // Обновляем заголовки
+        document.getElementById('status-title').innerText = successTitle;
+        
+        // Формируем контент
+        details.innerHTML = `
+            <div style="margin-bottom: var(--space-md);">
+                <span style="color: var(--text-tertiary); font-size: 12px; text-transform: uppercase;">${orderLabel}:</span>
+                <span style="color: var(--primary-color); font-weight: bold; font-size: 16px; margin-left: 5px;">#${orderNumber}</span>
+            </div>
+            <div style="margin-bottom: var(--space-lg);">
+                <span style="color: var(--text-tertiary); font-size: 12px; text-transform: uppercase;">${statusLabel}:</span>
+                <span style="color: var(--success-color); font-weight: 600; margin-left: 5px;">${status}</span>
+            </div>
+            <div style="padding: var(--space-md); background: var(--bg-color); border-radius: var(--radius-md); border: 1px solid var(--border-color); font-style: italic; color: var(--text-primary);">
+                "${randomPhrase}"
+            </div>`;
+        
+        // 5. Кнопка "Понятно" (на выбранном языке)
+        const okBtn = document.querySelector('#statusModal .modal-footer .btn-primary');
+        if (okBtn) {
+            okBtn.style.display = 'block';
+            okBtn.innerText = window.getTranslation ? window.getTranslation('common.btnOk', lang) : 'Понятно';
+            
+            // Удаляем старый обработчик и добавляем новый
+            okBtn.onclick = () => {
+                // Закрываем модалку
+                this.closeStatusModal();
+                // Очищаем форму
+                this.resetForm();
+            };
+        }
+        
+        // 4. Показываем пользователю
+        document.getElementById('statusModal').classList.add('active');
     },
 
-    resetForm: function() {
+     resetForm: function() {
         console.log('🔄 Сброс формы...');
         
         // 1. Сбрасываем стандартные поля формы
@@ -255,6 +332,4 @@ const FormHandler = {
     }
 };
 
-
 window.FormHandler = FormHandler;
-
